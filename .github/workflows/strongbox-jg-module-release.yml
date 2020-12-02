@@ -1,6 +1,7 @@
 name: test-module-release
 
 on:
+  workflow_run: ~
   push:
     paths-ignore:
       - 'docs/**'
@@ -26,6 +27,8 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: ${{ env.INSTALL_JDK_VERSION }}
+      - name: Setup settings.xml
+        run: mkdir ~/.m2 && curl -o ~/.m2/settings.xml https://strongbox.github.io/assets/resources/maven/settings.xml
       - name: Setup Maven cache
         uses: actions/cache@v2
         with:
