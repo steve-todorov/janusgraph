@@ -1,0 +1,54 @@
+name: test-module-release
+
+on:
+  push:
+    paths-ignore:
+      - 'docs/**'
+      - '-*.md'
+      - '-**/*.md'
+  pull_request:
+    paths-ignore:
+      - 'docs/**'
+      - '-*.md'
+      - '-**/*.md'
+
+env:
+  # Default Elasticsearch heap size can be too large for Travis
+  ES_JAVA_OPTS: "-Xms256m -Xmx512m"
+  INSTALL_JDK_VERSION: 1.8
+
+jobs:
+  module-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup JDK ${{ INSTALL_JDK_VERSION }}
+        uses: actions/setup-java@v1
+        with:
+          java-version: ${{ INSTALL_JDK_VERSION }}
+      - name: Setup Maven cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+      - name: Install expect
+        run: sudo apt-get -y install expect
+      - run: mvn clean install --batch-mode -Pjanusgraph-release -Dgpg.skip=true -DskipTests=true
+      - run: mvn install -pl janusgraph-dist -Pjanusgraph-release -Dgpg.skip=true
+
+#  build:
+#    runs-on: ubuntu-latest
+#    strategy:
+#      fail-fast: false
+#      matrix:
+#        MODULE: ['driver', 'server', 'test']
+#        # Commenting Windows out in order to preserve our free minutes.
+#        # We can re-enable it, if we get a sponsor.
+#        os: [ubuntu-latest, windows-latest, macos-latest]
+#        java: [ 8, 11.0.3 ]
+#    steps:
+#      - uses: actions/checkout@v2
+#      - name: Build the Docker image
+#        run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
