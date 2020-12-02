@@ -35,8 +35,8 @@ jobs:
             ${{ runner.os }}-maven-
       - name: Install expect
         run: sudo apt-get -y install expect
-      - run: mvn clean install --batch-mode -Pjanusgraph-release -Dgpg.skip=true -DskipTests=true
-      - run: mvn install -pl janusgraph-dist -Pjanusgraph-release -Dgpg.skip=true
+      - run: mvn clean install --batch-mode -Pjanusgraph-release -Dgpg.skip=true -DskipTests=true --show-version -Drat.skip=true
+      - run: mvn install -pl janusgraph-dist -Pjanusgraph-release -Dgpg.skip=true --show-version -Drat.skip=true
 
 #  build:
 #    runs-on: ubuntu-latest
