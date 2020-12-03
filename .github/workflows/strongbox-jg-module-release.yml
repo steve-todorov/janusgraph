@@ -28,7 +28,7 @@ jobs:
         with:
           java-version: ${{ env.INSTALL_JDK_VERSION }}
       - name: Setup settings.xml
-        run: touch ~/.m2/settings.xml && curl https://strongbox.github.io/assets/resources/maven/settings.xml | sed 's/http:\\/\\/repo\\./http:\\/\\/eu\\.repo\\./' > ~/.m2/settings.xml
+        run: touch ~/.m2/settings.xml && curl https://strongbox.github.io/assets/resources/maven/settings.xml | sed 's/http:\/\/repo\./http:\/\/eu\.repo\./' > ~/.m2/settings.xml
       - name: Setup Maven cache
         uses: actions/cache@v2
         with:
